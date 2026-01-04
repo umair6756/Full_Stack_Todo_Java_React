@@ -1,0 +1,85 @@
+name: Full Stack CI/CD with Security
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-security:
+    runs-on: ubuntu-latest
+
+    steps:
+     
+    # ️ Checkout Code
+     
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+     
+    #  Frontend Security (React)
+     
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+
+    - name: Install frontend dependencies
+      working-directory: frontend
+      run: npm install
+
+    - name: Frontend security audit (npm)
+      working-directory: frontend
+      run: npm audit --audit-level=high
+      continue-on-error: true
+
+     
+    #  Backend Security (Java)
+     
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: 17
+
+    - name: Build backend
+      working-directory: backend
+      run: mvn clean package -DskipTests
+
+     
+    #  OWASP Dependency Check
+     
+    - name: OWASP Dependency Check (Backend)
+      uses: dependency-check/Dependency-Check_Action@v3
+      with:
+        project: "backend"
+        path: backend
+        format: "HTML"
+      continue-on-error: true
+
+     
+    #  Docker Build
+     
+    - name: Build frontend Docker image
+      run: docker build -t frontend-app ./frontend
+
+    - name: Build backend Docker image
+      run: docker build -t backend-app ./backend
+
+     
+    #  Trivy Security Scan
+     
+    - name: Trivy scan frontend image
+      uses: aquasecurity/trivy-action@v0.24.0
+      with:
+        image-ref: frontend-app
+        severity: HIGH,CRITICAL
+        exit-code: 0
+
+    - name: Trivy scan backend image
+      uses: aquasecurity/trivy-action@v0.24.0
+      with:
+        image-ref: backend-app
+        severity: HIGH,CRITICAL
+        exit-code: 0
