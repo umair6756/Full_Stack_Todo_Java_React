@@ -12,16 +12,16 @@ jobs:
 
     steps:
      
-    # ️ Checkout Code
+    # Checkout Code
      
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4.1.3  
 
      
-    #  Frontend Security (React)
+    # Frontend Security (React)
      
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v4.1.0  
       with:
         node-version: 18
 
@@ -35,10 +35,10 @@ jobs:
       continue-on-error: true
 
      
-    #  Backend Security (Java)
+    # Backend Security (Java)
      
     - name: Setup Java
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v4.2.0  
       with:
         distribution: temurin
         java-version: 17
@@ -48,7 +48,7 @@ jobs:
       run: mvn clean package -DskipTests
 
      
-    #  OWASP Dependency Check
+    # OWASP Dependency Check
      
     - name: OWASP Dependency Check (Backend)
       uses: dependency-check/Dependency-Check_Action@v3
@@ -59,7 +59,7 @@ jobs:
       continue-on-error: true
 
      
-    #  Docker Build
+    # Docker Build
      
     - name: Build frontend Docker image
       run: docker build -t frontend-app ./frontend
@@ -68,17 +68,17 @@ jobs:
       run: docker build -t backend-app ./backend
 
      
-    #  Trivy Security Scan
+    # Trivy Security Scan
      
     - name: Trivy scan frontend image
-      uses: aquasecurity/trivy-action@v0.33.0
+      uses: aquasecurity/trivy-action@v0.32.0  
       with:
         image-ref: frontend-app
         severity: HIGH,CRITICAL
         exit-code: 0
 
     - name: Trivy scan backend image
-      uses: aquasecurity/trivy-action@v0.33.0
+      uses: aquasecurity/trivy-action@v0.32.0  #
       with:
         image-ref: backend-app
         severity: HIGH,CRITICAL
