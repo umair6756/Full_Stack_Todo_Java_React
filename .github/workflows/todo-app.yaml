@@ -71,14 +71,14 @@ jobs:
     #  Trivy Security Scan
      
     - name: Trivy scan frontend image
-      uses: aquasecurity/trivy-action@v0.24.0
+      uses: aquasecurity/trivy-action@v0.33.0
       with:
         image-ref: frontend-app
         severity: HIGH,CRITICAL
         exit-code: 0
 
     - name: Trivy scan backend image
-      uses: aquasecurity/trivy-action@v0.24.0
+      uses: aquasecurity/trivy-action@v0.33.0
       with:
         image-ref: backend-app
         severity: HIGH,CRITICAL
