@@ -51,7 +51,7 @@ jobs:
     #  OWASP Dependency Check
      
     - name: OWASP Dependency Check (Backend)
-      uses: dependency-check/Dependency-Check_Action@v3
+      uses: dependency-check/Dependency-Check_Action@master
       with:
         project: "backend"
         path: backend
