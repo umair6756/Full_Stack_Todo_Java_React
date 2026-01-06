@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  id-token: write   
+  contents: read
+
 jobs:
   build-security:
     runs-on: ubuntu-latest
@@ -16,6 +20,16 @@ jobs:
      
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Configure AWS credentials (OIDC)
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::971422673599:role/github-ecr-rolee
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR
+      uses: aws-actions/amazon-ecr-login@v2
+
 
      
     #  Frontend Security (React)
@@ -83,3 +97,16 @@ jobs:
         image-ref: backend-app
         severity: HIGH,CRITICAL
         exit-code: 0
+
+    - name: Tag Frontend Docker image
+      run: |
+        docker tag frontend-app:latest 971422673599.dkr.ecr.us-east-1.amazonaws.com/hafiz-repo/frontend-app:latest
+
+    - name: Tag Backend Docker image
+      run: |
+        docker tag backend-app:latest 971422673599.dkr.ecr.us-east-1.amazonaws.com/hafiz-repo/backend-app:latest
+
+    - name: Push Docker images to ECR
+      run: |
+        docker push 971422673599.dkr.ecr.us-east-1.amazonaws.com/hafiz-repo/frontend-app:latest
+        docker push 971422673599.dkr.ecr.us-east-1.amazonaws.com/hafiz-repo/backend-app:latest
