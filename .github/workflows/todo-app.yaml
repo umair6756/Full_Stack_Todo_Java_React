@@ -100,13 +100,13 @@ jobs:
 
     - name: Tag Frontend Docker image
       run: |
-        docker tag frontend-app:latest 971422673599.dkr.ecr.us-east-1.amazonaws.com/hafiz-repo/frontend-app:latest
+        docker tag frontend-app:latest 971422673599.dkr.ecr.us-east-1.amazonaws.com/hafiz-repo:latest
 
     - name: Tag Backend Docker image
       run: |
-        docker tag backend-app:latest 971422673599.dkr.ecr.us-east-1.amazonaws.com/hafiz-repo/backend-app:latest
+        docker tag backend-app:latest 971422673599.dkr.ecr.us-east-1.amazonaws.com/hafiz-repo:latest
 
     - name: Push Docker images to ECR
       run: |
-        docker push 971422673599.dkr.ecr.us-east-1.amazonaws.com/hafiz-repo/frontend-app:latest
-        docker push 971422673599.dkr.ecr.us-east-1.amazonaws.com/hafiz-repo/backend-app:latest
+        docker push 971422673599.dkr.ecr.us-east-1.amazonaws.com/hafiz-repo:latest
+        docker push 971422673599.dkr.ecr.us-east-1.amazonaws.com/hafiz-repo:latest
